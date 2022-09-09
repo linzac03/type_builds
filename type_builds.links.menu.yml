@@ -1,0 +1,6 @@
+type_hooks.type_form:
+  title: 'Type Builds settings'
+  route_name: type_builds.settings_form
+  description: 'Set manually deployed frontend environments to be deployed on update of specified content types'
+  parent: build_hooks.admin_config_build_hooks
+  weight: -2

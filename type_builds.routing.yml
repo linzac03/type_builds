@@ -1,0 +1,9 @@
+type_builds.settings_form:
+  path: '/admin/config/type_builds/settings'
+  defaults:
+    _form: '\Drupal\type_builds\Form\TypeBuildsSettingsForm'
+    _title: 'Type Builds Settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

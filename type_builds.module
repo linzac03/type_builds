@@ -1,0 +1,28 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+function type_builds_entity_update(EntityInterface $entity) {
+  $config = \Drupal::config('type_builds.settings');
+  $entity_manager = \Drupal::service('entity_type.manager');
+
+  $no_build = $config->get('no_build');
+  $valid_bundles = $config->get('content_types');
+  $environments = $config->get('frontend_type_environments');
+  if (!$no_build && $entity instanceof ContentEntityInterface) {
+    if (build_hooks_get_logger_service()->isEntityTypeLoggable($entity) && $valid_bundles[$entity->bundle()]) {
+      build_hooks_get_logger_service()->logEntityUpdated($entity);
+      foreach($environments as $id => $environment) {
+        $env_entity = $entity_manager->getStorage('frontend_environment')->load($id);
+        build_hooks_get_trigger_service()->triggerBuildHookForEnvironment($env_entity);
+      }
+      build_hooks_get_trigger_service()->invalidateToolbarCacheTag();      
+    }
+  } else if ($no_build) {
+    $link = Link::fromTextAndUrl(t('Type Builds settings'), Url::fromRoute('type_builds.settings_form'))->toString();
+    \Drupal::messenger()->addWarning(t('No build hook run, this is disabled in %link', ['%link' => $link]));
+  }
+}

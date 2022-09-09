@@ -1,0 +1,8 @@
+name: 'Type Builds'
+type: module
+description: 'Triggers build hooks environments according to content types for our use case'
+core_version_requirement: '9.x'
+package: 'Build Hooks'
+dependencies: 
+  - drupal:build_hooks
+
